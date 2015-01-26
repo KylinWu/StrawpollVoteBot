@@ -1,4 +1,4 @@
-trawpollVoteBot ##
+## StrawpollVoteBot ##
 
 This is a [Strawpoll](http://strawpoll.me/) Vote Bot
 
