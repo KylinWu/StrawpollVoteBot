@@ -4,9 +4,9 @@ class StrawPoll {
     public function __construct() {
     }
 
-    public function vote($id, $votes, $amount = 10, $proxyList = null, $timeout = 5, $showErrors = true) {
+    public function vote($id, $votes, $amount = 10, $proxyList = null, $timeout = 5) {
         $mh = curl_multi_init();
-        $chs = array();
+        
         if(is_file($proxyList)){ 
             $parts = pathinfo($proxyList);
             $proxies = file($proxyList);
@@ -19,20 +19,15 @@ class StrawPoll {
         if($amount > 1000) {
             $amount = count($proxies);      
         }
-
+        
+        $handle = array();
         $used = array();
         $url = 'http://strawpoll.me/api/v2/polls/'.$id;
 
         for($i = 0; $i < $amount; $i++) {
             $ch = curl_init();
-            $chs[] = $ch;
             if(isset($proxies)) {
-                if(count($proxies) < 1) {
-                    if($showErrors) {
-                        echo 'Out of proxies :(' . PHP_EOL;
-                    }
-                    break;
-                }
+                if(count($proxies) < 1) break;
                 $key = array_rand($proxies);
                 $proxy = $proxies[$key];
                 unset($proxies[$key]);
@@ -75,51 +70,29 @@ class StrawPoll {
                 CURLOPT_TIMEOUT => $timeout
             ));
             curl_multi_add_handle($mh, $ch);
+            $handle[$i] = $ch;
         }
 
         $running = null;
         $votes = 0;
-        $j = 0;
-        $results = array();
         do {
-            while(($exec = curl_multi_exec($mh, $running)) == CURLM_CALL_MULTI_PERFORM);
-            if($exec != CURLM_OK) {
-                break;
+            curl_multi_exec($mh, $running);
+            curl_multi_select($mh);
+        } while ($running > 0);
+
+        foreach($handle as $ch) {
+            $info = curl_getinfo($ch);
+            if($info['http_code'] == 200) {
+                $votes++;
             }
-            while($ch = curl_multi_info_read($mh)) {
-                $j++;
-                $ch = $ch['handle'];
-                $error = curl_error($ch);
-                if(!$error) {
-                    $resp = curl_multi_getcontent($ch);
-                    $out = json_decode($resp, true);
-                    if(!empty($out)) {
-                        if($showErrors) {
-                            echo 'Didn\'t vote. Invalid response.' . PHP_EOL;
-                            var_dump($resp);
-                        }
-                    } 
-                    else {
-                        if(empty($resp)) {
-                            $votes++;
-                            echo '[' . $votes . '] Voted' . PHP_EOL;
-                        }
-                    }
-                    $results[] = $out;
-                } 
-                else {
-                    $results[] = $error;
-                    if($showErrors) {
-                        echo $error . PHP_EOL;
-                    }
-                }
-                curl_multi_remove_handle($mh, $ch);
-                curl_close($ch);                
-            }
-        } while($running);
+        }
+
+        foreach($handle as $ch) {
+            curl_multi_remove_handle($mh, $ch);
+        }
         curl_multi_close($mh);
 
-        return array('results' => $results, 'votes' => $votes, 'total' => $amount);
+        return array('votes' => $votes, 'total' => $amount);
     }
 }
 ?>

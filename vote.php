@@ -10,7 +10,7 @@ else {
     $option = $argv[2] - 1;
     $amount = $argv[3];
     $sp = new StrawPoll();
-    $votes = $sp->vote($id, $option, $amount, 'proxies.txt', 30, false);
+    $votes = $sp->vote($id, $option, $amount, 'proxies.txt');
     echo 'Successfully voted ' . $votes['votes'] . '/' . $votes['total'] . ' time(s)' . "\n";
 
 }
