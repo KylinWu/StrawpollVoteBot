@@ -12,20 +12,25 @@ function get_html($url) {
 	return $result;
 }
 
-$html = get_html('http://checkerproxy.net/all_proxy');
+$today = date("Y-m-d");
+$url = 'http://checkerproxy.net/getProxy?date='.$today;
+$html = get_html($url);
 
 $dom = new DOMDocument();
+libxml_use_internal_errors(true);
 $dom->loadHTML($html);
-$textarea = $dom->getElementsByTagName("textarea");
+libxml_clear_errors();
+$textarea = $dom->getElementsByTagName("li");
+$file = fopen("proxies.txt","w");
 foreach ($textarea as $value) {
-    if($value->getAttribute('name') == 'insert')
-        $content = $value->nodeValue;
+    $class = $value->getAttribute('class');
+    if(empty($class)){
+        $content = $value->nodeValue."\n";
+        fwrite($file, $content);
+    }
 }
 
-$file = fopen("proxies.txt","w");
-fwrite($file, $content);
 fclose($file);
 
 echo 'The proxy list file:proxies.txt are updated at ' . date("Y-m-d H:i:s") . "\n";
-
 ?>
