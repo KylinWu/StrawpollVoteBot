@@ -11,7 +11,7 @@ class StrawPoll {
             $parts = pathinfo($proxyList);
             $proxies = file($proxyList);
         }
-        $body = '{"votes":['."$votes".']}';
+        $body = '{"pollId":'."$id".',"votes":['."$votes".']}';
         $headers = array(
             'Content-Type: application/json'
         );
@@ -22,7 +22,7 @@ class StrawPoll {
         
         $handle = array();
         $used = array();
-        $url = 'http://strawpoll.me/api/v2/polls/'.$id;
+        $url = 'http://strawpoll.me/api/v2/votes';
 
         for($i = 0; $i < $amount; $i++) {
             $ch = curl_init();
@@ -64,7 +64,7 @@ class StrawPoll {
             curl_setopt_array($ch, array(
                 CURLOPT_URL => $url,
                 CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_CUSTOMREQUEST => 'PATCH',
+                CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => $body,
                 CURLOPT_HTTPHEADER => $headers,
                 CURLOPT_TIMEOUT => $timeout
