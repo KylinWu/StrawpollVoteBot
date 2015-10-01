@@ -4,7 +4,7 @@ This is a [Strawpoll](http://strawpoll.me/) Vote Bot. You will need to have PHP5
 
 ## Installing PHP and cURL
 
-**Ubuntu Linx**
+**Ubuntu Linux**
 
 1. Install PHP:
 
@@ -14,14 +14,20 @@ This is a [Strawpoll](http://strawpoll.me/) Vote Bot. You will need to have PHP5
 
     `sudo apt-get install php5-curl`
 
+3. Restart Apache:
+
+    `sudo /etc/init.d/apache2 restart`
+    
 **Other**
 
-1. ![Go to cURL's download section on their website](http://curl.haxx.se/dlwiz/?type=bin)
+1. ![Go to cURL's download section](http://curl.haxx.se/dlwiz/?type=bin)
 2. Select your Operating System
 3. Select your OS version [situational]
 4. Select cURL version [situational]
 5. Click download
 6. Follow install directions
+
+If these steps do not work for you, try going ![here](http://php.net/manual/en/curl.installation.php).
 
 ## Usage ##
 
