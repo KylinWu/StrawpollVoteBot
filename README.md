@@ -4,7 +4,7 @@ This is a [Strawpoll](http://strawpoll.me/) Vote Bot. You will need to have PHP5
 
 ## Installing PHP and cURL
 
-**Ubuntu Linux**
+**Ubuntu/Debian Linux**
 
 1. Install PHP:
 
