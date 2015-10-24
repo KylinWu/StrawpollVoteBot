@@ -17,6 +17,22 @@ This is a [Strawpoll](http://strawpoll.me/) Vote Bot. You will need to have PHP5
 3. Restart Apache:
 
     `sudo /etc/init.d/apache2 restart`
+
+**Arch Linux**
+
+Install PHP:
+
+    sudo pacman -S php
+
+**Fedora**
+
+1. Install PHP:
+
+    `sudo dnf install php`
+
+2. Install php-xml:
+
+    `sudo dnf install php-xml`
     
 **Other**
 
