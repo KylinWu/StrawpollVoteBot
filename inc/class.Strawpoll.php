@@ -36,12 +36,13 @@ class StrawPoll {
                 $parts = explode(':', $proxy);
                 if(isset($parts[0], $parts[1])) {
                     $proxyIP = gethostbyname($parts[0]);
-                    $proxyPort = $parts[1];
+                    $proxyPort1 = $parts[1];
                 } 
                 else {
                     $i--;
                     continue;
                 }
+                $proxyPort = preg_replace("/[^0-9]/", "", $proxyPort1);
                 if(isset($parts[2])) {
                     $proxyType = strtoupper($proxyType) == 'SOCKS5' ? CURLPROXY_SOCKS5 : CURLPROXY_HTTP;
                 }
